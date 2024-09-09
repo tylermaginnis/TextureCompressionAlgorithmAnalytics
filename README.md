@@ -7,7 +7,7 @@ This project, `TextureCompressionAlgorithmAnalytics`, is designed to analyze and
 - **ShaderCompiler**: Contains the shader compiler code and related files.
   - `CMakeLists.txt`: CMake configuration file for building the shader compiler.
   - `include/stb_image.h`: Header file for image loading and processing.
-
+  - `include/stb_imahe_write.h`: Header file for image writing.
 ## Building the Project
 To build the project, you need to have CMake installed. Follow these steps:
 
