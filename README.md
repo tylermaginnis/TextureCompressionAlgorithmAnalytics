@@ -1,7 +1,7 @@
 # Texture Compression Algorithm Analytics
 
 ## Overview
-This project, `TextureCompressionAlgorithmAnalytics`, is designed to analyze and compare various texture compression algorithms. It includes a shader compiler and utilizes several image formats and compression techniques.
+This project, `TextureCompressionAlgorithmAnalytics`, is designed to analyze and compare various texture compression algorithms.
 
 ## Project Structure
 - **ShaderCompiler**: Contains the shader compiler code and related files.
