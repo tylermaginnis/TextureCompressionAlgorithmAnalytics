@@ -10,9 +10,11 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "include/stb_image_write.h"
 
-// Forward declaration of the DXT1 compression and decompression functions
+// Forward declaration of the DXT1 and DXT2 compression and decompression functions
 void compressWithDXT1(const std::vector<uint8_t>& textureData, int width, int height, std::vector<uint8_t>& compressedData);
 void decompressWithDXT1(const std::vector<uint8_t>& compressedData, int width, int height, std::vector<uint8_t>& textureData);
+void compressWithDXT2(const std::vector<uint8_t>& textureData, int width, int height, std::vector<uint8_t>& compressedData);
+void decompressWithDXT2(const std::vector<uint8_t>& compressedData, int width, int height, std::vector<uint8_t>& textureData);
 
 // Enum for different compression algorithms
 enum class CompressionAlgorithm {
@@ -44,6 +46,10 @@ bool compressTexture(const std::vector<uint8_t>& textureData, int width, int hei
             std::cout << "Compressing using DXT1..." << std::endl;
             compressWithDXT1(textureData, width, height, compressedData);
             return true;
+        case CompressionAlgorithm::DXT2:
+            std::cout << "Compressing using DXT2..." << std::endl;
+            compressWithDXT2(textureData, width, height, compressedData);
+            return true;
         // Other cases...
         default:
             return false;
@@ -56,6 +62,10 @@ bool decompressTexture(const std::vector<uint8_t>& compressedData, int width, in
         case CompressionAlgorithm::DXT1:
             std::cout << "Uncompressing using DXT1..." << std::endl;
             decompressWithDXT1(compressedData, width, height, textureData);
+            return true;
+        case CompressionAlgorithm::DXT2:
+            std::cout << "Uncompressing using DXT2..." << std::endl;
+            decompressWithDXT2(compressedData, width, height, textureData);
             return true;
         // Other cases...
         default:
@@ -143,18 +153,30 @@ int main(int argc, char* argv[]) {
                 CompressionAlgorithm algorithm = static_cast<CompressionAlgorithm>(i);
                 std::vector<uint8_t> compressedData;
                 if (compressTexture(textureData, width, height, algorithm, compressedData)) {
-                    std::string outputFilePath = outputDirectory + "/" + entry.path().filename().string() + "." + std::to_string(i) + ".compressed";
+                    std::string algorithmName;
+                    switch (algorithm) {
+                        case CompressionAlgorithm::DXT1:
+                            algorithmName = "DXT1";
+                            break;
+                        case CompressionAlgorithm::DXT2:
+                            algorithmName = "DXT2";
+                            break;
+                        // Add other cases as needed
+                        default:
+                            algorithmName = "Unknown";
+                            break;
+                    }
+                    std::string outputFilePath = outputDirectory + "/" + entry.path().filename().string() + "." + algorithmName + ".compressed";
                     writeToFile(outputFilePath, compressedData);
                     printStatistics(inputFilePath, outputFilePath, width, height, channels, compressedData);
 
                     // Uncompress the data to verify correctness
                     std::vector<uint8_t> uncompressedData;
                     if (decompressTexture(compressedData, width, height, algorithm, uncompressedData)) {
-                        std::string uncompressedFilePath = outputDirectory + "/" + entry.path().filename().string() + "." + std::to_string(i) + ".uncompressed";
+                        std::string uncompressedFilePath = outputDirectory + "/" + entry.path().filename().string() + "." + algorithmName + ".uncompressed.png";
 
                         // Save the uncompressed data as a PNG file
-                        std::string pngFilePath = outputDirectory + "/" + entry.path().filename().string() + "." + std::to_string(i) + ".png";
-                        saveAsPNG(pngFilePath, uncompressedData, width, height);
+                        saveAsPNG(uncompressedFilePath, uncompressedData, width, height);
                     }
                 }
             }

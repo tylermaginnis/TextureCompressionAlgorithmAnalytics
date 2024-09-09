@@ -9,4 +9,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(include)
 
 # Add source files
-add_executable(ShaderCompiler main.cpp compression/dxt1.cpp)
+add_executable(ShaderCompiler main.cpp compression/dxt/dxt1.cpp compression/dxt/dxt2.cpp)
